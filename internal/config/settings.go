@@ -287,6 +287,7 @@ func (s *Settings) UnmarshalJSON(data []byte) error {
 }
 
 func DefaultSettings() Settings {
+	pluginsDisabled := false
 	return Settings{
 		Version:      1,
 		Editor:       DefaultEditorSettings(),
@@ -297,6 +298,7 @@ func DefaultSettings() Settings {
 		LSP:          DefaultLSPSettings(),
 		Autocomplete: DefaultAutocompleteSettings(),
 		Markdown:     DefaultMarkdownSettings(),
+		Plugins:      PluginSettings{Enabled: &pluginsDisabled},
 	}
 }
 
