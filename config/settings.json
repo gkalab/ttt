@@ -9,6 +9,7 @@
     "diffContext": "changes",
     "diffWordWrap": false,
     "lineNumbers": true,
+    "cursorStyle": "steadyBar",
     "formatOnSave": false,
     "insertFinalNewline": true,
     "trimTrailingWhitespace": false,

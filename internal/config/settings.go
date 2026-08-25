@@ -146,6 +146,7 @@ func DefaultEditorSettings() EditorSettings {
 		DiffMode:                DiffModeSplit,
 		DiffContext:             DiffContextChanges,
 		LineNumbers:             true,
+		CursorStyle:             "steadyBar",
 		InsertFinalNewline:      true,
 		GutterStyle:             "compact",
 		BorderStyle:             "default",

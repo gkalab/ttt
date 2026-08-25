@@ -43,7 +43,7 @@ All editor settings are nested under the `editor` key.
 | `editor.autoIndent` | bool | `true` | Inherit the previous line's indent on Enter, plus one level after `{ ( [ :` (turn off for `noautoindent` behavior) |
 | `editor.autoDedent` | bool | `true` | Dedent one level when typing a closing `} ) ]` on a blank line |
 | `editor.lineNumbers` | bool | `true` | Show line numbers in the gutter |
-| `editor.cursorStyle` | string | `""` | Cursor style: `"block"`, `"underline"`, or `"bar"` |
+| `editor.cursorStyle` | string | `"steadyBar"` | Cursor style: `"block"`, `"underline"`, or `"bar"` |
 | `editor.formatOnSave` | bool | `false` | Auto-format the document via LSP on save |
 | `editor.insertFinalNewline` | bool | `true` | Ensure files end with a newline on load and save |
 | `editor.trimTrailingWhitespace` | bool | `false` | Remove trailing whitespace from lines on save |
@@ -163,7 +163,7 @@ When `editor.formatOnSave` is `true`, external formatters take priority over LSP
     "autoIndent": true,
     "autoDedent": true,
     "lineNumbers": true,
-    "cursorStyle": "",
+    "cursorStyle": "steadyBar",
     "formatOnSave": false,
     "insertFinalNewline": true,
     "trimTrailingWhitespace": false,

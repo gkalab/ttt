@@ -108,7 +108,7 @@ type Cell struct {
 type CursorStyle int
 
 const (
-	CursorStyleBlinkingBar CursorStyle = iota // default
+	CursorStyleBlinkingBar CursorStyle = iota
 	CursorStyleSteadyBar
 	CursorStyleBlinkingBlock
 	CursorStyleSteadyBlock

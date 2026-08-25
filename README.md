@@ -537,7 +537,7 @@ To edit the raw files, use **Settings: Open settings.json** and **Settings: Open
 | `lineNumbers` | bool | `true` | Show line numbers in the gutter |
 | `sidebarVisible` | bool | `true` | Show the sidebar on startup |
 | `sidebarWidth` | int | `30` | Width of the sidebar in columns |
-| `cursorStyle` | string | `""` | Cursor style: `"block"`, `"underline"`, or `"bar"` |
+| `cursorStyle` | string | `"steadyBar"` | Cursor style: `"block"`, `"underline"`, or `"bar"` |
 | `theme` | string | `""` | Theme name (from `~/.config/ttt/themes/`) |
 | `debugMode` | bool | `false` | Enable debug logging to `~/.config/ttt/debug.log` |
 | `formatOnSave` | bool | `false` | Auto-format on save (external formatter first, then LSP) |
