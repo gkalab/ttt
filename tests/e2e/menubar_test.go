@@ -13,29 +13,29 @@ func TestMenuBarToggleHidesAndRestores(t *testing.T) {
 	h := newTestHarness(t, 100, 24)
 	defer h.stop()
 
-	if !strings.Contains(h.screenRow(0), menuBarRow) {
-		t.Fatalf("menu bar should be on row 0 by default, got %q", h.screenRow(0))
-	}
-
-	h.exec("menubar.toggle")
-
-	if h.app.Settings.Editor.IsMenuBarVisible() {
-		t.Error("setting should report the menu bar as hidden after toggle")
-	}
-	if h.app.MenuBar.Visible {
-		t.Error("menu bar widget should be hidden after toggle")
-	}
 	if strings.Contains(h.screenRow(0), menuBarRow) {
-		t.Errorf("row 0 should be reclaimed when the menu bar is hidden, got %q", h.screenRow(0))
+		t.Fatalf("menu bar should not be on row 0 by default, got %q", h.screenRow(0))
 	}
 
 	h.exec("menubar.toggle")
 
 	if !h.app.Settings.Editor.IsMenuBarVisible() {
-		t.Error("setting should report the menu bar as visible after second toggle")
+		t.Error("setting should report the menu bar as visible after toggle")
+	}
+	if !h.app.MenuBar.Visible {
+		t.Error("menu bar widget should be visible after toggle")
 	}
 	if !strings.Contains(h.screenRow(0), menuBarRow) {
-		t.Errorf("menu bar should be back on row 0, got %q", h.screenRow(0))
+		t.Errorf("menu bar should be on row 0 after toggle, got %q", h.screenRow(0))
+	}
+
+	h.exec("menubar.toggle")
+
+	if h.app.Settings.Editor.IsMenuBarVisible() {
+		t.Error("setting should report the menu bar as hidden after second toggle")
+	}
+	if strings.Contains(h.screenRow(0), menuBarRow) {
+		t.Errorf("row 0 should be reclaimed when the menu bar is hidden, got %q", h.screenRow(0))
 	}
 }
 
@@ -45,6 +45,7 @@ func TestMenuBarHideShowsRestoreHint(t *testing.T) {
 	h := newTestHarness(t, 100, 24)
 	defer h.stop()
 
+	h.exec("menubar.toggle")
 	h.exec("menubar.toggle")
 
 	h.assertContains("Menu bar hidden")
@@ -59,6 +60,7 @@ func TestMenuBarHintFallsBackToCommandName(t *testing.T) {
 
 	h.reg.ClearAllShortcuts()
 	h.exec("menubar.toggle")
+	h.exec("menubar.toggle")
 
 	h.assertContains("View: Toggle Menu Bar")
 }
@@ -69,7 +71,6 @@ func TestMenuDropdownFloatsWhileMenuBarHidden(t *testing.T) {
 	h := newTestHarness(t, 100, 24)
 	defer h.stop()
 
-	h.exec("menubar.toggle")
 	if h.app.MenuBar.Visible {
 		t.Fatal("menu bar should start hidden for this test")
 	}
@@ -97,7 +98,6 @@ func TestFloatingDropdownAnchorsToTopRow(t *testing.T) {
 	h := newTestHarness(t, 100, 24)
 	defer h.stop()
 
-	h.exec("menubar.toggle")
 	h.exec("menu.view")
 
 	if row := h.screenRow(0); !strings.ContainsRune(row, '╭') {

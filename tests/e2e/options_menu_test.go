@@ -235,6 +235,7 @@ func TestOptionsMenuBarPresent(t *testing.T) {
 	h := newTestHarness(t, 80, 24)
 	defer h.stop()
 
+	h.exec("menubar.toggle")
 	h.assertContains("Options")
 }
 

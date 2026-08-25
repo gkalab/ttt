@@ -42,14 +42,19 @@ func TestMenuBarHiddenAtStartup(t *testing.T) {
 	}
 }
 
-func TestMenuBarVisibleByDefault(t *testing.T) {
+func TestMenuBarHiddenByDefault(t *testing.T) {
 	a := buildTestApp(t, config.DefaultSettings())
 
-	if !a.MenuBar.Visible {
-		t.Error("menu bar should be visible by default")
+	if a.MenuBar.Visible {
+		t.Error("menu bar should be hidden by default")
 	}
-	if len(a.RootBox.Children) != 3 || a.RootBox.Children[0] != a.MenuBar {
-		t.Error("menu bar should be the first child of the root stack")
+	if len(a.RootBox.Children) != 2 {
+		t.Errorf("default root stack should have 2 children: got %d", len(a.RootBox.Children))
+	}
+	for _, child := range a.RootBox.Children {
+		if child == a.MenuBar {
+			t.Error("hidden menu bar should not be in the root stack")
+		}
 	}
 }
 
@@ -114,14 +119,21 @@ func TestMenuBarHiddenReclaimsTopRow(t *testing.T) {
 		return string(row)
 	}
 
+	hidden := rowText()
+	if strings.Contains(hidden, "File") {
+		t.Fatalf("menu bar should not be drawn on row 0 by default, got %q", hidden)
+	}
+
+	a.applyMenuBarVisibility(true)
+
 	visible := rowText()
 	if !strings.Contains(visible, "File") {
-		t.Fatalf("menu bar should be drawn on row 0, got %q", visible)
+		t.Fatalf("menu bar should be drawn on row 0 after showing, got %q", visible)
 	}
 
 	a.applyMenuBarVisibility(false)
 
-	if hidden := rowText(); strings.Contains(hidden, "File") {
-		t.Errorf("menu bar still drawn on row 0 after hiding: %q", hidden)
+	if afterHide := rowText(); strings.Contains(afterHide, "File") {
+		t.Errorf("menu bar still drawn on row 0 after hiding: %q", afterHide)
 	}
 }

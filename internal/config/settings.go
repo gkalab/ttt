@@ -117,7 +117,10 @@ func (e EditorSettings) IsShowTrailingNewlineEnabled() bool {
 }
 
 func (e EditorSettings) IsMenuBarVisible() bool {
-	return e.MenuBar == nil || *e.MenuBar
+	if e.MenuBar == nil {
+		return false
+	}
+	return *e.MenuBar
 }
 
 func (e EditorSettings) IsSyntaxHighlightEnabled() bool {

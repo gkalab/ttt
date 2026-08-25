@@ -12,6 +12,7 @@ func TestStartup(t *testing.T) {
 	h := newTestHarness(t, 80, 24)
 	defer h.stop()
 
+	h.exec("menubar.toggle")
 	h.assertContains("File")
 	h.assertContains("Edit")
 	h.assertContains("View")
@@ -21,6 +22,8 @@ func TestStartup(t *testing.T) {
 func TestMenuBarRendered(t *testing.T) {
 	h := newTestHarness(t, 80, 24)
 	defer h.stop()
+
+	h.exec("menubar.toggle")
 
 	row := h.screenRow(0)
 	if !strings.Contains(row, "File") {
