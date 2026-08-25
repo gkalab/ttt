@@ -35,14 +35,14 @@ func testColorContrast(fg, bg string) float64 {
 
 func TestDefaultTheme(t *testing.T) {
 	th := DefaultTheme()
-	if th.Tabs.Active.Fg != "#ffffff" {
-		t.Fatalf("expected ActiveTab.Fg '#ffffff', got '%s'", th.Tabs.Active.Fg)
+	if th.Tabs.Active.Fg != "#d8dee9" {
+		t.Fatalf("expected ActiveTab.Fg '#d8dee9', got '%s'", th.Tabs.Active.Fg)
 	}
 	if th.Tabs.Active.Bold != true {
 		t.Fatal("expected ActiveTab.Bold true")
 	}
-	if th.Border.Fg != "#555555" {
-		t.Fatalf("expected Border.Fg '#555555', got '%s'", th.Border.Fg)
+	if th.Border.Fg != "#4f5b66" {
+		t.Fatalf("expected Border.Fg '#4f5b66', got '%s'", th.Border.Fg)
 	}
 	if !th.Diff.CollapsedEmphasis.Bold {
 		t.Fatal("expected collapsed diff emphasis to default to bold")
@@ -60,8 +60,8 @@ func TestThemePartialJSON(t *testing.T) {
 	if th.StatusBar.Bg != "#ff0000" {
 		t.Fatalf("expected StatusBar.Bg '#ff0000', got '%s'", th.StatusBar.Bg)
 	}
-	if th.Tabs.Active.Fg != "#ffffff" {
-		t.Fatalf("ActiveTab.Fg should still be '#ffffff', got '%s'", th.Tabs.Active.Fg)
+	if th.Tabs.Active.Fg != "#d8dee9" {
+		t.Fatalf("ActiveTab.Fg should still be '#d8dee9', got '%s'", th.Tabs.Active.Fg)
 	}
 }
 

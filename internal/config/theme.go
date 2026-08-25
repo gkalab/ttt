@@ -233,57 +233,57 @@ type ThemeConfig struct {
 func DefaultTheme() ThemeConfig {
 	t := ThemeConfig{
 		Terminal: DefaultTerminalColors(),
-		Default:  StyleDef{Fg: "#fafafa", Bg: "#1f1f1f"},
+		Default:  StyleDef{Fg: "#d8dee9", Bg: "#303841"},
 		Muted:    StyleDef{Fg: "#888888"},
 
 		Menu: MenuStyles{
-			Active: StyleDef{Fg: "#ffffff", Bg: "#505050", Bold: true},
+			Active: StyleDef{Fg: "#d8dee9", Bg: "#4f5b66", Bold: true},
 		},
 		StatusBar: StyleDef{},
 
 		Tabs: TabStyles{
-			Active:   StyleDef{Fg: "#ffffff", Bold: true},
-			Inactive: StyleDef{Fg: "#999999"},
+			Active:   StyleDef{Fg: "#d8dee9", Bold: true},
+			Inactive: StyleDef{Fg: "#65737e"},
 		},
 
 		Sidebar: SidebarStyles{
-			Header:   StyleDef{Fg: "#ffffff", Bold: true},
-			Selected: StyleDef{Fg: "#ffffff", Bg: "#37373d"},
+			Header:   StyleDef{Fg: "#d8dee9", Bold: true},
+			Selected: StyleDef{Fg: "#d8dee9", Bg: "#4f5b66"},
 		},
 
 		Dialog: DialogStyles{
-			Selected: StyleDef{Fg: "#ffffff", Bg: "#37373d"},
+			Selected: StyleDef{Fg: "#d8dee9", Bg: "#4f5b66"},
 		},
 
-		Border: StyleDef{Fg: "#555555"},
+		Border: StyleDef{Fg: "#4f5b66"},
 
 		Editor: EditorStyles{
-			ActiveLine:    StyleDef{Bg: "#282828"},
-			Selection:     StyleDef{Bg: "#282828"},
-			LineNumber:    StyleDef{Fg: "#999999"},
-			SearchMatch:   StyleDef{Bg: "#623800"},
-			SearchActive:  StyleDef{Bg: "#9e6a03"},
-			BracketMatch:  StyleDef{Bg: "#3a3a3a"},
-			BracketColors: []string{"yellow", "magenta", "blue"},
+			ActiveLine:    StyleDef{Bg: "#4c5863"},
+			Selection:     StyleDef{Bg: "#4f5b66"},
+			LineNumber:    StyleDef{Fg: "#848b95"},
+			SearchMatch:   StyleDef{Fg: "#333333", Bg: "#fac761"},
+			SearchActive:  StyleDef{Fg: "#333333", Bg: "#f97b58"},
+			BracketMatch:  StyleDef{Bg: "#3a3a3a"}, // TODO
+			BracketColors: []string{"yellow", "magenta", "blue"}, // TODO
 		},
-		Scrollbar: StyleDef{Fg: "#999999", Bg: "#555555"},
+		Scrollbar: StyleDef{Fg: "#697076", Bg: "#444c54"},
 		Diff: DiffStyles{
 			CollapsedEmphasis: StyleDef{Bold: true},
 		},
 
 		Syntax: SyntaxStyles{
-			Comment:     StyleDef{Fg: "#6a9955"},
-			String:      StyleDef{Fg: "#ce9178"},
-			Keyword:     StyleDef{Fg: "#569cd6"},
-			Number:      StyleDef{Fg: "#b5cea8"},
-			Operator:    StyleDef{Fg: "#d4d4d4"},
-			Function:    StyleDef{Fg: "#dcdcaa"},
-			Type:        StyleDef{Fg: "#4ec9b0"},
-			Builtin:     StyleDef{Fg: "#4ec9b0"},
-			Variable:    StyleDef{Fg: "#9cdcfe"},
-			Punctuation: StyleDef{Fg: "#d4d4d4"},
-			Tag:         StyleDef{Fg: "#569cd6"},
-			Attribute:   StyleDef{Fg: "#9cdcfe"},
+			Comment:     StyleDef{Fg: "#a6acb9"},
+			String:      StyleDef{Fg: "#99c794"},
+			Keyword:     StyleDef{Fg: "#c695c6"},
+			Number:      StyleDef{Fg: "#f9ae58"},
+			Operator:    StyleDef{Fg: "#f97b58"},
+			Function:    StyleDef{Fg: "#5fb4b4"},
+			Type:        StyleDef{Fg: "#6699cc"},
+			Builtin:     StyleDef{Fg: "#ec5f66"},
+			Variable:    StyleDef{Fg: "#d8dee9"},
+			Punctuation: StyleDef{Fg: "#ffffff"},
+			Tag:         StyleDef{Fg: "#c695c6"},
+			Attribute:   StyleDef{Fg: "#6699cc"},
 		},
 
 		Borders: BorderChars{
@@ -315,9 +315,9 @@ func (t *ThemeConfig) ResolveColors() {
 	fillBg(&t.Button.Focused, t.Sidebar.Selected.Bg)
 	fillFg(&t.Button.Focused, t.Sidebar.Selected.Fg)
 	fillFg(&t.BorderActive, t.Default.Fg)
-	fillBg(&t.Diff.Added, "#1e2e1e")
-	fillBg(&t.Diff.Deleted, "#2e1e1e")
-	fillBg(&t.Diff.Modified, "#2e2e1e")
+	fillBg(&t.Diff.Added, "#3d686e")
+	fillBg(&t.Diff.Deleted, "#62434b")
+	fillBg(&t.Diff.Modified, "#394d55")
 	fillFg(&t.Diff.CollapsedEmphasis, t.Default.Fg)
 	emphasisBg := t.Diff.CollapsedEmphasis.Bg
 	if emphasisBg == "" {
@@ -328,14 +328,14 @@ func (t *ThemeConfig) ResolveColors() {
 		t.Diff.CollapsedHover = t.Diff.Collapsed
 	}
 	fillBg(&t.Diff.CollapsedHover, t.Editor.ActiveLine.Bg)
-	fillFg(&t.Diff.GutterAdded, "#73c991")
-	fillFg(&t.Diff.GutterDeleted, "#f14c4c")
-	fillFg(&t.Diff.GutterModified, "#e2c08d")
+	fillFg(&t.Diff.GutterAdded, "#99c794")
+	fillFg(&t.Diff.GutterDeleted, "#ec5f66")
+	fillFg(&t.Diff.GutterModified, "#f9ae58")
 	t.Diff.GutterAdded.Fg = contrastSafeForeground(t.Diff.GutterAdded.Fg, t.Diff.Added.Bg, t.Default.Fg)
 	t.Diff.GutterDeleted.Fg = contrastSafeForeground(t.Diff.GutterDeleted.Fg, t.Diff.Deleted.Bg, t.Default.Fg)
-	fillFg(&t.Success, "#73c991")
-	fillFg(&t.Danger, "#f14c4c")
-	fillFg(&t.Warning, "#e2c08d")
+	fillFg(&t.Success, "#99c794")
+	fillFg(&t.Danger, "#ec5f66")
+	fillFg(&t.Warning, "#fac761")
 	fillFg(&t.Editor.Diagnostics.Error, t.Danger.Fg)
 	fillFg(&t.Editor.Diagnostics.Warning, t.Warning.Fg)
 	fillFg(&t.Editor.Diagnostics.Info, t.Default.Fg)

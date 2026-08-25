@@ -1,0 +1,75 @@
+{
+  "default": { "fg": "#D8DEE9", "bg": "#303841" },
+
+  "success": { "fg": "#99C794" },
+  "danger":  { "fg": "#EC5F66" },
+  "warning": { "fg": "#FAC761" },
+  "border":  { "fg": "#4F5B66" },
+
+  "statusBar": {
+    "fg": "#D8DEE9",
+    "bg": "#303841"
+  },
+
+  "tabs": {
+    "active":   { "fg": "#D8DEE9", "bg": "#303841", "bold": true },
+    "inactive": { "fg": "#65737E" }
+  },
+
+  "sidebar": {
+    "header":   { "fg": "#D8DEE9", "bold": true },
+    "item":     { "fg": "#C0C5CE" },
+    "selected": { "fg": "#D8DEE9", "bg": "#4F5B66" }
+  },
+
+  "dialog": {
+    "input":    { "fg": "#D8DEE9", "bg": "#4F5B66" },
+    "item":     { "fg": "#C0C5CE" },
+    "selected": { "fg": "#D8DEE9", "bg": "#4F5B66" },
+    "muted":    { "fg": "#65737E" }
+  },
+
+  "editor": {
+    "lineNumber":   { "fg": "#848B95" },
+    "activeLine":   { "bg": "#4C5863" },
+    "selection":    { "bg": "#4F5B66" },
+    "searchMatch":  { "bg": "#FAC761", "fg": "#333333" },
+    "searchActive": { "bg": "#F97B58", "fg": "#333333" }
+  },
+
+  "menu": {
+    "item":   { "fg": "#C0C5CE" },
+    "active": { "fg": "#D8DEE9", "bg": "#4F5B66", "bold": true }
+  },
+
+  "diff": {
+    "added":    { "bg": "#3D686E" },
+    "deleted":  { "bg": "#62434B" },
+    "modified": { "bg": "#394D55" }
+  },
+
+  "scrollbar": { "fg": "#697076", "bg": "#444C54" },
+
+  "syntax": {
+    "comment":     { "fg": "#A6ACB9" },    
+    "string":      { "fg": "#99C794" },    
+    "keyword":     { "fg": "#C695C6" },    
+    "number":      { "fg": "#F9AE58" },    
+    "operator":    { "fg": "#F97B58" },
+    "function":    { "fg": "#5FB4B4" },    
+    "type":        { "fg": "#6699CC" },    
+    "builtin":     { "fg": "#EC5F66" },
+    "variable":    { "fg": "#D8DEE9" },
+    "punctuation": { "fg": "#FFFFFF" },
+    "tag":         { "fg": "#C695C6" },
+    "attribute":   { "fg": "#6699CC" }
+  },
+
+  "borders": {
+    "horizontal": "─", "vertical": "│",
+    "topLeft": "┌", "topRight": "┐",
+    "bottomLeft": "└", "bottomRight": "┘",
+    "topTee": "┬", "bottomTee": "┴",
+    "leftTee": "├", "rightTee": "┤"
+  }
+}
