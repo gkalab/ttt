@@ -1,6 +1,6 @@
 # TTT Editor: Terminal Text Tool
 
-The IDE that lives in your terminal. Not a simplified terminal editor — a real alternative to VS Code, Zed, and Sublime that happens to run in your terminal. Single Go binary, zero config.
+The IDE that lives in your terminal. A TUI that feels like GUI. A real alternative to VS Code, Zed, and Sublime that happens to run in your terminal. Single Go binary, zero config.
 
 ![TTT Demo](docs-web/public/demo/demo.gif)
 
@@ -88,6 +88,16 @@ This produces an optimized binary at `bin/ttt`. Add it to your `PATH` or copy it
 cp bin/ttt ~/.local/bin/
 ```
 
+### Herdr
+
+TTT is available as a [Herdr](https://herdr.dev) plugin, so you can open it as a pane inside your Herdr terminal workspace.
+
+```sh
+herdr plugin install eugenioenko/ttt/herdr-plugin
+```
+
+Once installed, bind it to a key (e.g. `Ctrl+b e`) to launch TTT in the active worktree with a single keystroke. See the [Herdr plugin README](herdr-plugin/README.md) for setup and configuration details.
+
 ## Features
 
 ### Editor
@@ -153,6 +163,7 @@ Multi-root file tree in the sidebar (Ctrl+K E). When multiple folders are open, 
 - Expand/collapse with Enter or arrow keys
 - Right-click context menu: **New File**, **New Folder**, **Rename**, **Delete**
 - Sidebar actions button for **Refresh** and **New File**
+- File-type icons, colored by the theme (glyph mappings from [nvim-web-devicons](https://github.com/nvim-tree/nvim-web-devicons)). They need a [Nerd Font](https://www.nerdfonts.com) in your terminal, so they default off; turn them on with `"appearance": { "icons": "nerd-font" }` or **Options > Font Icons**
 
 ### Search
 
@@ -170,7 +181,7 @@ See [Search](docs-web/src/content/docs/guides/search.md).
 
 Changes panel in the sidebar (Ctrl+K C) with full staging workflow.
 
-Working-tree files and files under expanded commits can be shown as a compact directory **Tree** or a full-path **List** (the default). The choice persists in `git.fileView`. Changes, commit details, and Explorer expose safe **Expand All** and **Collapse All** actions in their relevant menus.
+Working-tree files and files under expanded commits can be shown as a compact directory **Tree** or a full-path **List** (the default). The choice persists in `git.fileView`. File-type icons sit between the status letter and the file name; like the Explorer's, they follow the shared `appearance.icons` setting, need a Nerd Font, and default off — **Options > Font Icons** toggles them. Changes, commit details, and Explorer expose safe **Expand All** and **Collapse All** actions in their relevant menus.
 
 **Staging:**
 - **Spacebar** — toggle stage/unstage on the selected file
@@ -237,7 +248,7 @@ The bottom panel (Ctrl+K B to toggle) contains the **Terminal**, **Problems**, a
 Built-in terminal emulator. Press Ctrl+T to toggle the terminal panel, or Alt+T for fullscreen.
 
 - **Ctrl+K T** to spawn a new terminal tab; multiple tabs with a vertical inner tab bar on the left edge
-- Full VT escape sequence support via [`hinshun/vt10x`](https://github.com/hinshun/vt10x) and PTY management via [`creack/pty`](https://github.com/creack/pty)
+- Full VT escape sequence support via [`gitpod-io/xterm-go`](https://github.com/gitpod-io/xterm-go) and PTY management via [`aymanbagabas/go-pty`](https://github.com/aymanbagabas/go-pty)
 - True color (24-bit) and 256-color rendering
 - When the terminal is focused, all keys go to the PTY except force keys (Ctrl+T, Alt+T, Ctrl+Q, Ctrl+P, Ctrl+K P, Ctrl+B, F6)
 - Terminal shell and scrollback are configurable in `settings.json`; ANSI colors are theme-configurable via the `terminal` field in `theme.json`
@@ -504,6 +515,14 @@ TTT is better because of the people who took the time to try it, report bugs, re
 - [@tenox7](https://github.com/tenox7) — the **Outline** sidebar panel (LSP document symbols with a built-in Go/Markdown fallback) and **markdown syntax highlighting**.
 - [@pirate-boop](https://github.com/pirate-boop) — **NixOS support** end to end: the initial `flake.nix` and ongoing `vendorHash` upkeep.
 - [@arimxyer](https://github.com/arimxyer) — re-envisioned and re-designed the **diff & code review experience** (commit history detail, live current changes, unified presentation controls, hierarchical file trees), plus tab drag reordering, orientation help, checked plugin menu entries, deterministic exec automation, and CLI open-at-line support.
+- [@SimonOcampo1](https://github.com/SimonOcampo1) — the **welcome page**, the **folder picker**, the **right-docked panel**, LSP file URI fixes, and a run of integrated terminal fixes.
+- [@bet4it](https://github.com/bet4it) — migrated the **integrated terminal to xterm-go**, plus terminal copy/paste and device-attribute fixes.
+- [@sjdonado](https://github.com/sjdonado) — **inline image rendering** via the Kitty graphics protocol.
+- [@RonanCodes](https://github.com/RonanCodes) — **Nerd Font file icons** in the Explorer and Changes panel.
+- [@risixdzn](https://github.com/risixdzn) — **git status colors** in the Explorer.
+- [@austinm911](https://github.com/austinm911) — **multi-line string highlighting** across lines.
+- [@DBinK](https://github.com/DBinK) — the **VSCode Dark+ theme**.
+- [@vikas-0](https://github.com/vikas-0) — whitespace handling in **Quick Open**.
 
 **Packaging**
 
@@ -511,9 +530,14 @@ TTT is better because of the people who took the time to try it, report bugs, re
 
 **Bug reports & feature requests**
 
-- [@jetpax](https://github.com/jetpax) — surfacing the macOS / iTerm2 issues (mouse support, clipboard copy, large-list scrolling, workspace paths).
-- [@egorse](https://github.com/egorse) — the search-panel focus fix.
-- [@pirate-boop](https://github.com/pirate-boop) — the Cyrillic cursor-offset fix and a number of UX/packaging ideas.
+- [@jetpax](https://github.com/jetpax): surfacing the macOS / iTerm2 issues (mouse support, clipboard copy, large-list scrolling, workspace paths).
+- [@egorse](https://github.com/egorse): the search-panel focus fix.
+- [@pirate-boop](https://github.com/pirate-boop): the Cyrillic cursor-offset fix and a number of UX/packaging ideas.
+- [@forthrin](https://github.com/forthrin): great insight into emacs, keyboards and keyboard shortcuts :) 
+- [@lozzo](https://github.com/lozzo): the fullwidth CJK rendering report, tested through to the fix.
+- [@vikas-0](https://github.com/vikas-0): the Quick Open behavior report.
+- [@JohnWJ-co](https://github.com/JohnWJ-co) and [@hassanabdulqayyum](https://github.com/hassanabdulqayyum): the Herdr plugin crash reports.
+- [@SimonOcampo1](https://github.com/SimonOcampo1): the welcome page proposal and terminal drag-and-drop idea.
 
 Want to help? Bug reports, feature requests, and pull requests are all welcome — open an [issue](https://github.com/eugenioenko/ttt/issues) or a PR.
 

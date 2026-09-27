@@ -50,11 +50,12 @@ func (a *App) ShowThemePicker() {
 	originalStyleMap := a.Screen.GetStyleMap()
 	originalPalette := *a.Palette
 	applyTheme := func(theme config.ThemeConfig) {
-		a.Screen.SetStyleMap(BuildStyleMap(theme))
-		*a.Palette = BuildTerminalPalette(theme)
+		a.Screen.SetStyleMap(BuildStyleMap(theme, WithTransparentBackground(a.Settings.Editor.TransparentBackground)))
+		*a.Palette = BuildTerminalPalette(theme, WithTransparentBackground(a.Settings.Editor.TransparentBackground))
 		*a.Borders = BuildBorderSet(theme.Borders)
 		a.ApplyBorderStyle()
 		a.Renderer.Clear()
+		a.invalidateImageLayer()
 	}
 	sel := widgets.NewSelectWidget(widgets.SelectConfig{
 		Items:       items,
@@ -81,6 +82,7 @@ func (a *App) ShowThemePicker() {
 			a.Screen.SetStyleMap(originalStyleMap)
 			*a.Palette = originalPalette
 			a.Renderer.Clear()
+			a.invalidateImageLayer()
 		},
 	})
 

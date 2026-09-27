@@ -68,6 +68,18 @@ func (a *App) UseListGitFileView() {
 	a.SaveAndApplySettings()
 }
 
+func (a *App) ToggleFileIcons() {
+	a.Settings.Appearance.Icons = toggledIconMode(a.Settings.Appearance.Icons)
+	a.SaveAndApplySettings()
+}
+
+func toggledIconMode(mode string) string {
+	if mode == config.IconsNone {
+		return config.IconsNerdFont
+	}
+	return config.IconsNone
+}
+
 func (a *App) ExpandAllGitFiles() {
 	if detail := a.EditorGroup.ActiveCommitDetailWidget(); detail != nil {
 		detail.ExpandAllFiles()
@@ -139,6 +151,11 @@ func (a *App) ToggleSyntaxHighlight() {
 
 func (a *App) ToggleBracketPairColorization() {
 	a.Settings.Editor.BracketPairColorization = !a.Settings.Editor.BracketPairColorization
+	a.SaveAndApplySettings()
+}
+
+func (a *App) ToggleTransparentBackground() {
+	a.Settings.Editor.TransparentBackground = !a.Settings.Editor.TransparentBackground
 	a.SaveAndApplySettings()
 }
 
@@ -324,6 +341,13 @@ func (a *App) BuildOptionsMenu() []ui.ContextMenuItem {
 		menuBarChecked = ui.MenuChecked
 	}
 
+	transparentBgChecked := ui.MenuUnchecked
+	if a.Settings.Editor.TransparentBackground {
+		transparentBgChecked = ui.MenuChecked
+	}
+
+	fontIconsChecked := menuChecked(a.Settings.Appearance.Icons == config.IconsNerdFont)
+
 	items := []ui.ContextMenuItem{
 		{Label: "Line Numbers", Command: "options.toggleLineNumbers", Checked: lineNumbersChecked},
 		{Label: "Word Wrap", Command: "options.toggleWordWrap", Checked: wordWrapChecked},
@@ -333,7 +357,9 @@ func (a *App) BuildOptionsMenu() []ui.ContextMenuItem {
 		{Label: "Bracket Colors", Command: "options.toggleBracketColors", Checked: bracketColorChecked},
 		{Label: "LSP Code Assist", Command: "options.toggleLSP", Checked: lspChecked},
 		{Label: "Git Gutter", Command: "options.toggleGitGutter", Checked: gitGutterChecked},
+		{Label: "Font Icons", Command: "options.toggleFontIcons", Checked: fontIconsChecked},
 		{Label: "Menu Bar", Command: menuBarToggleCommand, Checked: menuBarChecked},
+		{Label: "Transparent BG", Command: "options.toggleTransparentBackground", Checked: transparentBgChecked},
 		ui.MenuSep(),
 		{Label: "Diff Views", Submenu: a.BuildDiffViewOptions()},
 		{Label: "Git Files", Submenu: a.BuildGitFileOptions()},
@@ -380,6 +406,7 @@ func (a *App) buildGitFileOptions(expandCommand, collapseCommand string) []ui.Co
 	return []ui.ContextMenuItem{
 		{Label: "Tree", Command: "options.useGitFileTree", Checked: menuChecked(a.Settings.Git.FileView == config.GitFileViewTree)},
 		{Label: "List", Command: "options.useGitFileList", Checked: menuChecked(a.Settings.Git.FileView != config.GitFileViewTree)},
+		{Label: "File Icons", Command: "options.toggleFontIcons", Checked: menuChecked(a.Settings.Appearance.Icons == config.IconsNerdFont)},
 		ui.MenuSep(),
 		{Label: "Expand All", Command: expandCommand},
 		{Label: "Collapse All", Command: collapseCommand},
@@ -474,6 +501,12 @@ func registerOptionsCommands(app *App) {
 	})
 
 	reg.Register(command.Command{
+		ID: "options.toggleFontIcons", Title: "Toggle Font Icons",
+		Keywords: []string{"preferences", "settings", "explorer", "git", "files", "icons", "nerd font"},
+		Handler:  app.ToggleFileIcons,
+	})
+
+	reg.Register(command.Command{
 		ID: "options.toggleAutoIndent", Title: "Toggle Auto Indent",
 		Keywords: []string{"preferences", "settings", "editor", "indentation", "indent"},
 		Handler:  app.ToggleAutoIndent,
@@ -494,6 +527,12 @@ func registerOptionsCommands(app *App) {
 	reg.Register(command.Command{
 		ID: "options.toggleBracketColors", Title: "Toggle Bracket Pair Colorization",
 		Handler: app.ToggleBracketPairColorization,
+	})
+
+	reg.Register(command.Command{
+		ID: "options.toggleTransparentBackground", Title: "Toggle Transparent Background",
+		Keywords: []string{"preferences", "settings", "editor", "view", "background", "transparent", "terminal"},
+		Handler:  app.ToggleTransparentBackground,
 	})
 
 	reg.Register(command.Command{

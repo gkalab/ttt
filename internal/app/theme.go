@@ -11,20 +11,44 @@ import (
 	"github.com/gdamore/tcell/v3/color"
 )
 
-func BuildStyleMap(theme config.ThemeConfig) term.StyleMap {
+type styleMapOptions struct {
+	transparentBg bool
+}
+
+type StyleMapOption func(*styleMapOptions)
+
+func WithTransparentBackground(v bool) StyleMapOption {
+	return func(o *styleMapOptions) { o.transparentBg = v }
+}
+
+func BuildStyleMap(theme config.ThemeConfig, opts ...StyleMapOption) term.StyleMap {
+	var o styleMapOptions
+	for _, fn := range opts {
+		fn(&o)
+	}
+
 	m := term.DefaultStyleMap()
 
 	base := tcell.StyleDefault
 	if theme.Default.Fg != "" {
 		base = base.Foreground(tcell.GetColor(theme.Default.Fg))
 	}
-	if theme.Default.Bg != "" {
+	if theme.Default.Bg != "" && !o.transparentBg {
 		base = base.Background(tcell.GetColor(theme.Default.Bg))
 	}
 	for i := range m {
 		m[i] = base
 	}
 	m[term.StyleSelection] = base.Reverse(true)
+
+	if o.transparentBg {
+		if theme.CommitHeader.Bg == theme.Default.Bg {
+			theme.CommitHeader.Bg = ""
+		}
+		if theme.Input.Item.Bg == theme.Default.Bg {
+			theme.Input.Item.Bg = ""
+		}
+	}
 
 	applyStyleDef(&m, term.StyleStatusBar, theme.StatusBar)
 	applyStyleDef(&m, term.StyleCommitHeader, theme.CommitHeader)
@@ -86,6 +110,17 @@ func BuildStyleMap(theme config.ThemeConfig) term.StyleMap {
 	applyStyleDef(&m, term.StyleSuccess, theme.Success)
 	applyStyleDef(&m, term.StyleDanger, theme.Danger)
 	applyStyleDef(&m, term.StyleWarning, theme.Warning)
+	applyStyleDef(&m, term.StyleGitConflict, theme.Conflict)
+	applyStyleDef(&m, term.StyleSuccessStaged, theme.SuccessStaged)
+	applyStyleDef(&m, term.StyleDangerStaged, theme.DangerStaged)
+	applyStyleDef(&m, term.StyleWarningStaged, theme.WarningStaged)
+	applyStyleDef(&m, term.StyleGitConflictStaged, theme.ConflictStaged)
+	applyStyleDef(&m, term.StyleFileIconRed, theme.FileIcons.Red)
+	applyStyleDef(&m, term.StyleFileIconYellow, theme.FileIcons.Yellow)
+	applyStyleDef(&m, term.StyleFileIconGreen, theme.FileIcons.Green)
+	applyStyleDef(&m, term.StyleFileIconCyan, theme.FileIcons.Cyan)
+	applyStyleDef(&m, term.StyleFileIconBlue, theme.FileIcons.Blue)
+	applyStyleDef(&m, term.StyleFileIconMagenta, theme.FileIcons.Magenta)
 
 	applyDiagStyle(&m, term.StyleDiagError, theme.Editor.Diagnostics.Error)
 	applyDiagStyle(&m, term.StyleDiagWarning, theme.Editor.Diagnostics.Warning)
@@ -182,26 +217,32 @@ func applyDiagStyle(m *term.StyleMap, idx term.Style, def config.StyleDef) {
 	m[idx] = tcell.StyleDefault.Underline(tcell.UnderlineStyleCurly, c)
 }
 
-func BuildTerminalPalettePtr(theme config.ThemeConfig) *ui.TerminalColorPalette {
-	p := BuildTerminalPalette(theme)
+func BuildTerminalPalettePtr(theme config.ThemeConfig, opts ...StyleMapOption) *ui.TerminalColorPalette {
+	p := BuildTerminalPalette(theme, opts...)
 	return &p
 }
 
-func BuildTerminalPalette(theme config.ThemeConfig) ui.TerminalColorPalette {
+func BuildTerminalPalette(theme config.ThemeConfig, opts ...StyleMapOption) ui.TerminalColorPalette {
+	var o styleMapOptions
+	for _, fn := range opts {
+		fn(&o)
+	}
+
 	tc := theme.Terminal
 	fg := tc.Foreground
 	if fg == "" {
 		fg = theme.Default.Fg
 	}
 	bg := tc.Background
-	if bg == "" {
+	if bg == "" && !o.transparentBg {
 		bg = theme.Default.Bg
 	}
 	ansi := tc.ANSIPalette()
 	p := ui.TerminalColorPalette{
-		Fg:       ui.ParseHexColor(fg),
-		Bg:       ui.ParseHexColor(bg),
-		Color256: ui.Build256Palette(),
+		Fg:          ui.ParseHexColor(fg),
+		Bg:          ui.ParseHexColor(bg),
+		SelectionBg: ui.ParseHexColor(tc.Selection),
+		Color256:    ui.Build256Palette(),
 	}
 	for i, hex := range ansi {
 		p.ANSI[i] = ui.ParseHexColor(hex)

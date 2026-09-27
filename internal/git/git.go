@@ -5,8 +5,10 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"os"
 	"os/exec"
 	"path/filepath"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
@@ -71,6 +73,35 @@ func IsRepoContext(ctx context.Context, dir string) bool {
 	cmd := gitCommandContext(ctx, "-C", dir, "rev-parse", "--is-inside-work-tree")
 	out, err := cmd.Output()
 	return err == nil && strings.TrimSpace(string(out)) == "true"
+}
+
+// DiscoverChildRepos returns immediate child directories of dir that are git
+// repositories. It is used when dir itself is not a git repo to find nested
+// repos whose changes should be shown.
+func DiscoverChildRepos(dir string) []string {
+	return DiscoverChildReposContext(context.Background(), dir)
+}
+
+func DiscoverChildReposContext(ctx context.Context, dir string) []string {
+	entries, err := os.ReadDir(dir)
+	if err != nil {
+		return nil
+	}
+	var repos []string
+	for _, e := range entries {
+		if ctx.Err() != nil {
+			return repos
+		}
+		if !e.IsDir() || strings.HasPrefix(e.Name(), ".") {
+			continue
+		}
+		child := filepath.Join(dir, e.Name())
+		if IsRepoContext(ctx, child) {
+			repos = append(repos, child)
+		}
+	}
+	sort.Strings(repos)
+	return repos
 }
 
 func StatusFiles(dir string) ([]FileStatus, error) {
@@ -173,6 +204,13 @@ func runPaths(dir string, gitArgs, paths []string) error {
 }
 
 func Commit(dir, message string) error {
+	if err := exec.Command("git", "-C", dir, "diff", "--cached", "--quiet").Run(); err == nil {
+		// Nothing staged -- stage everything, like VS Code does.
+		add := exec.Command("git", "-C", dir, "add", "-A")
+		if out, e := add.CombinedOutput(); e != nil {
+			return fmt.Errorf("%s: %s", e, strings.TrimSpace(string(out)))
+		}
+	}
 	cmd := exec.Command("git", "-C", dir, "commit", "-m", message)
 	if out, err := cmd.CombinedOutput(); err != nil {
 		return fmt.Errorf("%s: %s", err, strings.TrimSpace(string(out)))

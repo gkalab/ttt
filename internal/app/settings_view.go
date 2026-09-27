@@ -131,6 +131,9 @@ func settingsCategories() []settingsCategory {
 			{Label: "Git gutter", Kind: settingBool,
 				GetBool: func(s *config.Settings) bool { return s.Editor.IsGitGutterEnabled() },
 				SetBool: func(s *config.Settings, v bool) { s.Editor.GitGutter = boolPtr(v) }},
+			{Label: "Transparent background", Kind: settingBool,
+				GetBool: func(s *config.Settings) bool { return s.Editor.TransparentBackground },
+				SetBool: func(s *config.Settings, v bool) { s.Editor.TransparentBackground = v }},
 			{Label: "Markdown wrap width", Kind: settingInt, Min: 1,
 				GetInt: func(s *config.Settings) int { return s.Markdown.WrapWidth },
 				SetInt: func(s *config.Settings, v int) { s.Markdown.WrapWidth = v }},
@@ -150,6 +153,9 @@ func settingsCategories() []settingsCategory {
 				SetInt: func(s *config.Settings, v int) { s.Autocomplete.Debounce = v }},
 		}},
 		{Title: "Advanced", Fields: []settingField{
+			{Label: "Welcome page in home folder", Kind: settingBool,
+				GetBool: func(s *config.Settings) bool { return s.Welcome.ShowOnHome },
+				SetBool: func(s *config.Settings, v bool) { s.Welcome.ShowOnHome = v }},
 			{Label: "Git: file view", Kind: settingEnum, Options: gitFileViewItems,
 				GetString: func(s *config.Settings) string { return s.Git.FileView },
 				SetString: func(s *config.Settings, v string) { s.Git.FileView = v }},
@@ -159,6 +165,21 @@ func settingsCategories() []settingsCategory {
 			{Label: "Explorer: git-ignored files", Kind: settingBool,
 				GetBool: func(s *config.Settings) bool { return s.Explorer.ShowGitIgnored },
 				SetBool: func(s *config.Settings, v bool) { s.Explorer.ShowGitIgnored = v }},
+			{Label: "Explorer: git status colors", Kind: settingBool,
+				GetBool: func(s *config.Settings) bool { return s.Explorer.GitStatusColors },
+				SetBool: func(s *config.Settings, v bool) { s.Explorer.GitStatusColors = v }},
+			{Label: "Explorer: dim staged colors", Kind: settingBool,
+				GetBool: func(s *config.Settings) bool { return s.Explorer.DimStagedGitColors },
+				SetBool: func(s *config.Settings, v bool) { s.Explorer.DimStagedGitColors = v }},
+			{Label: "Icons", Kind: settingEnum, Options: iconModeItems,
+				GetString: func(s *config.Settings) string { return s.Appearance.Icons },
+				SetString: func(s *config.Settings, v string) { s.Appearance.Icons = v }},
+			{Label: "Chevron: collapsed", Kind: settingString,
+				GetString: func(s *config.Settings) string { return s.Appearance.Chevrons.Collapsed },
+				SetString: func(s *config.Settings, v string) { s.Appearance.Chevrons.Collapsed = v }},
+			{Label: "Chevron: expanded", Kind: settingString,
+				GetString: func(s *config.Settings) string { return s.Appearance.Chevrons.Expanded },
+				SetString: func(s *config.Settings, v string) { s.Appearance.Chevrons.Expanded = v }},
 			{Label: "Terminal shell", Kind: settingString, Restart: true,
 				GetString: func(s *config.Settings) string { return s.Terminal.Shell },
 				SetString: func(s *config.Settings, v string) { s.Terminal.Shell = v }},
@@ -182,6 +203,13 @@ func gitFileViewItems() []widgets.SelectItem {
 	return []widgets.SelectItem{
 		{ID: config.GitFileViewTree, Label: "Tree"},
 		{ID: config.GitFileViewList, Label: "List"},
+	}
+}
+
+func iconModeItems() []widgets.SelectItem {
+	return []widgets.SelectItem{
+		{ID: config.IconsNerdFont, Label: "Nerd Font"},
+		{ID: config.IconsNone, Label: "None"},
 	}
 }
 

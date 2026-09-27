@@ -155,21 +155,33 @@ func RunEventLoop(
 		}
 	}
 
+	// Last mouse position, so redraw can refresh the pointer after a key or
+	// async event opens an overlay or moves a divider. -1 until the first
+	// mouse event: no pointer escape is written before the mouse is seen.
+	mouseX, mouseY := -1, -1
+
 	redraw := func() {
-		cells := make([][]term.Cell, app.Root.Height)
-		for y := range cells {
-			cells[y] = make([]term.Cell, app.Root.Width)
+		// Every event path ends here, including scripted commands.
+		app.SyncEmptyState()
+		cells := renderer.NextFrame(app.Root.Width, app.Root.Height)
+		if app.ImageLayer != nil {
+			app.ImageLayer.Begin()
 		}
 		app.Root.Render(cells)
-		renderer.SetCurrent(cells)
 		if cx, cy, visible := app.Root.CursorPosition(); visible {
 			screen.ShowCursor(cx, cy)
 		} else {
 			screen.HideCursor()
 		}
 		renderer.Render(screen)
+		if app.commitImageLayer(screen) {
+			screen.Show()
+		}
 		// Must run after Render/CursorPosition, else content and cursor read different Term states mid-frame.
 		resizeTerminals(app)
+		if app.Screen != nil && mouseX >= 0 {
+			app.Screen.SetPointerShape(app.pointerShapeAt(mouseX, mouseY))
+		}
 	}
 
 	// Populate the status bar and register file watches for any files opened at
@@ -207,6 +219,7 @@ func RunEventLoop(
 
 	handleMouse := func(tev *tcell.EventMouse) {
 		mx, my := tev.Position()
+		mouseX, mouseY = mx, my
 		btn := tev.Buttons()
 		slog.Debug("mouse", "x", mx, "y", my, "btn", btn)
 		app.DismissSignatureHelp()
@@ -262,6 +275,8 @@ func RunEventLoop(
 			app.Root.SetSize(w, h)
 			resizeTerminals(app)
 			renderer.Clear()
+			app.invalidateImageLayer()
+			app.RefreshImageCellSize()
 			redraw()
 
 		case *tcell.EventInterrupt:
@@ -404,6 +419,8 @@ func RunEventLoop(
 				app.ApplyDiffOpen(v)
 			case *FileChangedResult:
 				app.HandleFileChanged(v.Path)
+			case *ExplorerDirChangedResult:
+				app.HandleExplorerDirChanged(v.Dir)
 			case *ui.SearchBatch:
 				app.Search.ApplyBatch(v)
 			case *DiffContentResult:
