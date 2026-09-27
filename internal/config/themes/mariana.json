@@ -31,8 +31,8 @@
 
   "editor": {
     "lineNumber":   { "fg": "#848B95" },
-    "activeLine":   { "bg": "#4C5863" },
-    "selection":    { "bg": "#4F5B66" },
+    "activeLine":   { "bg": "#47525D" },
+    "selection":    { "bg": "#5A697A" },
     "searchMatch":  { "bg": "#FAC761", "fg": "#333333" },
     "searchActive": { "bg": "#F97B58", "fg": "#333333" }
   },
