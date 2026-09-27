@@ -277,8 +277,8 @@ func DefaultTheme() ThemeConfig {
 		Border: StyleDef{Fg: "#4f5b66"},
 
 		Editor: EditorStyles{
-			ActiveLine:    StyleDef{Bg: "#4c5863"},
-			Selection:     StyleDef{Bg: "#4f5b66"},
+			ActiveLine:    StyleDef{Bg: "#47525d"},
+			Selection:     StyleDef{Bg: "#5a697a"},
 			LineNumber:    StyleDef{Fg: "#848b95"},
 			SearchMatch:   StyleDef{Fg: "#333333", Bg: "#fac761"},
 			SearchActive:  StyleDef{Fg: "#333333", Bg: "#f97b58"},
